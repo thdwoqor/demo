@@ -1,6 +1,7 @@
 package com.querypie.service.dto;
 
-public record BookSaveRequest(
+public record BookResponse(
+        Long id,
         String title,
         String author
 ) {

@@ -21,10 +21,10 @@ public class Book {
     private Long id;
     @Column(nullable = false)
     private String title;
-    private String content;
+    private String author;
 
-    public Book(final String title, final String content) {
+    public Book(final String title, final String author) {
         this.title = title;
-        this.content = content;
+        this.author = author;
     }
 }
