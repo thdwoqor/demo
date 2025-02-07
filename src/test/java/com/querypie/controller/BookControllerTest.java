@@ -5,10 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.querypie.DatabaseCleaner;
 import com.querypie.domain.Book;
 import com.querypie.domain.BookRepository;
-import com.querypie.domain.User;
 import com.querypie.service.dto.BookResponse;
 import com.querypie.service.dto.BookSaveRequest;
-import com.querypie.service.dto.UserResponse;
+import com.querypie.service.dto.BookUpdateRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
@@ -92,4 +91,25 @@ class BookControllerTest {
         assertThat(userResponse.title()).isEqualTo(book.getTitle());
         assertThat(userResponse.author()).isEqualTo(book.getAuthor());
     }
+
+    @Test
+    void 도서를_수정할_수_있다() {
+        //given
+        Book book = bookRepository.save(new Book("Java의 정석", "남궁성"));
+
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(new BookUpdateRequest("Java의 정석 2","송재백"))
+                .when().put("/books/"+book.getId())
+                .then().log().all()
+                .statusCode(200)
+                .extract();
+
+        //than
+        Book updateBook = bookRepository.findById(book.getId()).orElseThrow();
+        assertThat(updateBook.getTitle()).isEqualTo("Java의 정석 2");
+        assertThat(updateBook.getAuthor()).isEqualTo("송재백");
+    }
+
 }

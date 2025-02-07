@@ -2,6 +2,7 @@ package com.querypie.service;
 
 import com.querypie.domain.Book;
 import com.querypie.domain.BookRepository;
+import com.querypie.service.dto.BookUpdateRequest;
 import com.querypie.service.dto.BookResponse;
 import com.querypie.service.dto.BookSaveRequest;
 import java.util.List;
@@ -34,6 +35,12 @@ public class BookService {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("도서가 존재하지 않습니다."));
         return new BookResponse(book.getId(), book.getTitle(), book.getAuthor());
+    }
+
+    public void update(final Long id, final BookUpdateRequest request) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("도서가 존재하지 않습니다."));
+        book.update(request.title(), request.author());
     }
 
 }

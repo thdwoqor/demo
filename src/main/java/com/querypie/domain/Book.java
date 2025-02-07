@@ -27,4 +27,9 @@ public class Book {
         this.title = title;
         this.author = author;
     }
+
+    public void update(final String title, final String author){
+        this.title = title;
+        this.author = author;
+    }
 }
