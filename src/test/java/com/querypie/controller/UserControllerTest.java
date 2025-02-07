@@ -62,6 +62,7 @@ class UserControllerTest {
                 .statusCode(200)
                 .extract();
 
+        //than
         final List<UserResponse> responses = response.jsonPath().getList(".", UserResponse.class);
         assertThat(responses).hasSize(2);
         assertThat(responses.get(0).id()).isEqualTo(user1.getId());
@@ -82,6 +83,7 @@ class UserControllerTest {
                 .statusCode(200)
                 .extract();
 
+        //than
         UserResponse userResponse = response.jsonPath().getObject(".", UserResponse.class);
         assertThat(userResponse.id()).isEqualTo(user.getId());
         assertThat(userResponse.name()).isEqualTo(user.getName());
