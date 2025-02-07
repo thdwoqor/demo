@@ -43,4 +43,8 @@ public class BookService {
         book.update(request.title(), request.author());
     }
 
+    public void delete(final Long id) {
+        bookRepository.deleteById(id);
+    }
+
 }

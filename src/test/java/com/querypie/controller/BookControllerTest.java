@@ -13,6 +13,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ class BookControllerTest {
     void 책을_등록할_수_있다() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new BookSaveRequest("Java의 정석","남궁성"))
+                .body(new BookSaveRequest("Java의 정석", "남궁성"))
                 .when().post("/books")
                 .then().log().all()
                 .statusCode(200)
@@ -80,7 +81,7 @@ class BookControllerTest {
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
-                .when().get("/books/"+book.getId())
+                .when().get("/books/" + book.getId())
                 .then().log().all()
                 .statusCode(200)
                 .extract();
@@ -100,8 +101,8 @@ class BookControllerTest {
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new BookUpdateRequest("Java의 정석 2","송재백"))
-                .when().put("/books/"+book.getId())
+                .body(new BookUpdateRequest("Java의 정석 2", "송재백"))
+                .when().put("/books/" + book.getId())
                 .then().log().all()
                 .statusCode(200)
                 .extract();
@@ -110,6 +111,22 @@ class BookControllerTest {
         Book updateBook = bookRepository.findById(book.getId()).orElseThrow();
         assertThat(updateBook.getTitle()).isEqualTo("Java의 정석 2");
         assertThat(updateBook.getAuthor()).isEqualTo("송재백");
+    }
+
+    @Test
+    void 도서를_삭제할_수_있다() {
+        //given
+        Book book = bookRepository.save(new Book("Java의 정석", "남궁성"));
+
+        //when
+        ExtractableResponse<Response> response = RestAssured.given().log().all()
+                .when().delete("/books/" + book.getId())
+                .then().log().all()
+                .statusCode(200)
+                .extract();
+
+        //than
+        assertThat(bookRepository.findById(book.getId())).isEqualTo(Optional.empty());
     }
 
 }
