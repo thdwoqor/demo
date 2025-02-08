@@ -69,9 +69,11 @@ class BookControllerTest {
         assertThat(responses.get(0).id()).isEqualTo(book1.getId());
         assertThat(responses.get(0).title()).isEqualTo(book1.getTitle());
         assertThat(responses.get(0).author()).isEqualTo(book1.getAuthor());
+        assertThat(responses.get(0).isLoaned()).isEqualTo(false);
         assertThat(responses.get(1).id()).isEqualTo(book2.getId());
         assertThat(responses.get(1).title()).isEqualTo(book2.getTitle());
         assertThat(responses.get(1).author()).isEqualTo(book2.getAuthor());
+        assertThat(responses.get(1).isLoaned()).isEqualTo(false);
     }
 
     @Test
@@ -91,6 +93,7 @@ class BookControllerTest {
         assertThat(userResponse.id()).isEqualTo(book.getId());
         assertThat(userResponse.title()).isEqualTo(book.getTitle());
         assertThat(userResponse.author()).isEqualTo(book.getAuthor());
+        assertThat(userResponse.isLoaned()).isEqualTo(false);
     }
 
     @Test

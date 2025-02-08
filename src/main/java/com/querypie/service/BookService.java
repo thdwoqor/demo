@@ -2,9 +2,9 @@ package com.querypie.service;
 
 import com.querypie.domain.Book;
 import com.querypie.domain.BookRepository;
-import com.querypie.service.dto.BookUpdateRequest;
 import com.querypie.service.dto.BookResponse;
 import com.querypie.service.dto.BookSaveRequest;
+import com.querypie.service.dto.BookUpdateRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class BookService {
         List<Book> books = bookRepository.findAll();
 
         return books.stream()
-                .map(book -> new BookResponse(book.getId(), book.getTitle(), book.getAuthor()))
+                .map(BookResponse::from)
                 .toList();
     }
 
@@ -34,7 +34,7 @@ public class BookService {
     public BookResponse findById(final Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("도서가 존재하지 않습니다."));
-        return new BookResponse(book.getId(), book.getTitle(), book.getAuthor());
+        return BookResponse.from(book);
     }
 
     public void update(final Long id, final BookUpdateRequest request) {
