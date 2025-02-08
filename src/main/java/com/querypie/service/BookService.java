@@ -4,9 +4,12 @@ import com.querypie.domain.Book;
 import com.querypie.domain.BookRepository;
 import com.querypie.service.dto.BookResponse;
 import com.querypie.service.dto.BookSaveRequest;
+import com.querypie.service.dto.BookSearchCondition;
 import com.querypie.service.dto.BookUpdateRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,12 +21,17 @@ public class BookService {
     private final BookRepository bookRepository;
 
     public void save(final BookSaveRequest request) {
-        bookRepository.save(new Book(request.title(), request.author()));
+        bookRepository.save(new Book(request.title(), request.author(), request.publicationDate()));
     }
 
     @Transactional(readOnly = true)
-    public List<BookResponse> findAll() {
-        List<Book> books = bookRepository.findAll();
+    public List<BookResponse> search(
+            final BookSearchCondition condition,
+            final Pageable pageable
+    ) {
+        final PageRequest pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                pageable.getSort());
+        List<Book> books = bookRepository.search(condition, pageRequest);
 
         return books.stream()
                 .map(BookResponse::from)

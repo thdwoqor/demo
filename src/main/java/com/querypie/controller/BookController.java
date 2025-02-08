@@ -1,14 +1,18 @@
 package com.querypie.controller;
 
 import com.querypie.service.BookService;
-import com.querypie.service.dto.BookUpdateRequest;
 import com.querypie.service.dto.BookResponse;
 import com.querypie.service.dto.BookSaveRequest;
+import com.querypie.service.dto.BookSearchCondition;
+import com.querypie.service.dto.BookUpdateRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,8 +32,11 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public ResponseEntity<List<BookResponse>> findAll() {
-        return ResponseEntity.ok(bookService.findAll());
+    public ResponseEntity<List<BookResponse>> search(
+            @ModelAttribute final BookSearchCondition condition,
+            @PageableDefault final Pageable pageable
+    ) {
+        return ResponseEntity.ok(bookService.search(condition, pageable));
     }
 
     @GetMapping("/books/{bookId}")
@@ -42,7 +49,7 @@ public class BookController {
             @PathVariable final Long bookId,
             @RequestBody final BookUpdateRequest request
     ) {
-        bookService.update(bookId,request);
+        bookService.update(bookId, request);
         return ResponseEntity.ok().build();
     }
 

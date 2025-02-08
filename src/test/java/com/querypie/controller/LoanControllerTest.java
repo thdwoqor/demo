@@ -9,6 +9,7 @@ import com.querypie.service.LoanService;
 import com.querypie.service.dto.LoanRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalDate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +43,7 @@ class LoanControllerTest {
     @Test
     void 도서를_대출할_수_있다() {
         //given
-        Book book = bookRepository.save(new Book("Java의 정석", "남궁성"));
+        Book book = bookRepository.save(new Book("Java의 정석", "남궁성", LocalDate.now()));
         User user = userRepository.save(new User("송재백"));
 
         //when
@@ -62,7 +63,7 @@ class LoanControllerTest {
     @Test
     void 도서를_반납할_수_있다() {
         //given
-        Book book = bookRepository.save(new Book("Java의 정석", "남궁성"));
+        Book book = bookRepository.save(new Book("Java의 정석", "남궁성", LocalDate.now()));
         User user = userRepository.save(new User("송재백"));
 
         //when

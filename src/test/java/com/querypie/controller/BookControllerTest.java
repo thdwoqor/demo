@@ -12,6 +12,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +44,7 @@ class BookControllerTest {
     void 책을_등록할_수_있다() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new BookSaveRequest("Java의 정석", "남궁성"))
+                .body(new BookSaveRequest("Java의 정석", "남궁성", LocalDate.now()))
                 .when().post("/books")
                 .then().log().all()
                 .statusCode(200)
@@ -53,8 +54,8 @@ class BookControllerTest {
     @Test
     void 모든_도서를_조회할_수_있다() {
         //given
-        Book book1 = bookRepository.save(new Book("Java의 정석", "남궁성"));
-        Book book2 = bookRepository.save(new Book("자바 ORM 표준 JPA 프로그래밍", "김영한"));
+        Book book1 = bookRepository.save(new Book("Java의 정석", "남궁성", LocalDate.now()));
+        Book book2 = bookRepository.save(new Book("자바 ORM 표준 JPA 프로그래밍", "김영한", LocalDate.now()));
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -79,7 +80,7 @@ class BookControllerTest {
     @Test
     void id로_도서를_조회할_수_있다() {
         //given
-        Book book = bookRepository.save(new Book("Java의 정석", "남궁성"));
+        Book book = bookRepository.save(new Book("Java의 정석", "남궁성", LocalDate.now()));
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -99,7 +100,7 @@ class BookControllerTest {
     @Test
     void 도서를_수정할_수_있다() {
         //given
-        Book book = bookRepository.save(new Book("Java의 정석", "남궁성"));
+        Book book = bookRepository.save(new Book("Java의 정석", "남궁성", LocalDate.now()));
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -119,7 +120,7 @@ class BookControllerTest {
     @Test
     void 도서를_삭제할_수_있다() {
         //given
-        Book book = bookRepository.save(new Book("Java의 정석", "남궁성"));
+        Book book = bookRepository.save(new Book("Java의 정석", "남궁성", LocalDate.now()));
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()

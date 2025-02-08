@@ -1,5 +1,6 @@
 package com.querypie.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,12 +21,14 @@ public class Book {
     private Long id;
     private String title;
     private String author;
+    private LocalDate publicationDate;
     @Embedded
     private LoanStatus loanStatus;
 
-    public Book(final String title, final String author) {
+    public Book(final String title, final String author, final LocalDate publicationDate) {
         this.title = title;
         this.author = author;
+        this.publicationDate = publicationDate;
     }
 
     public void update(final String title, final String author) {
