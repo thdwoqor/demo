@@ -44,8 +44,7 @@ public class BookService {
     @Cacheable(value = "localCache", key = "#bookId")
     @Transactional(readOnly = true)
     public BookResponse findById(final Long bookId) {
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("도서가 존재하지 않습니다."));
+        Book book = bookRepository.getById(bookId);
         return BookResponse.from(book);
     }
 
@@ -56,8 +55,7 @@ public class BookService {
 
     @CacheEvict(value = "localCache", allEntries = true)
     public void update(final Long bookId, final BookUpdateRequest request) {
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("도서가 존재하지 않습니다."));
+        Book book = bookRepository.getById(bookId);
         book.update(request.title(), request.author());
     }
 
