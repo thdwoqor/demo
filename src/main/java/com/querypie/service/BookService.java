@@ -8,6 +8,8 @@ import com.querypie.service.dto.BookSearchCondition;
 import com.querypie.service.dto.BookUpdateRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,10 +22,11 @@ public class BookService {
 
     private final BookRepository bookRepository;
 
-    public void save(final BookSaveRequest request) {
-        bookRepository.save(new Book(request.title(), request.author(), request.publicationDate()));
-    }
-
+    @Cacheable(
+            value = "localCache",
+            key = "{ #pageable.pageNumber, #pageable.pageSize }",
+            condition = "#condition.title == null && #condition.author == null && #pageable.sort.empty == true"
+    )
     @Transactional(readOnly = true)
     public List<BookResponse> search(
             final BookSearchCondition condition,
@@ -38,21 +41,29 @@ public class BookService {
                 .toList();
     }
 
+    @Cacheable(value = "localCache", key = "#bookId")
     @Transactional(readOnly = true)
-    public BookResponse findById(final Long id) {
-        Book book = bookRepository.findById(id)
+    public BookResponse findById(final Long bookId) {
+        Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException("도서가 존재하지 않습니다."));
         return BookResponse.from(book);
     }
 
-    public void update(final Long id, final BookUpdateRequest request) {
-        Book book = bookRepository.findById(id)
+    @CacheEvict(value = "localCache", allEntries = true)
+    public void save(final BookSaveRequest request) {
+        bookRepository.save(new Book(request.title(), request.author(), request.publicationDate()));
+    }
+
+    @CacheEvict(value = "localCache", allEntries = true)
+    public void update(final Long bookId, final BookUpdateRequest request) {
+        Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException("도서가 존재하지 않습니다."));
         book.update(request.title(), request.author());
     }
 
-    public void delete(final Long id) {
-        bookRepository.deleteById(id);
+    @CacheEvict(value = "localCache", allEntries = true)
+    public void delete(final Long bookId) {
+        bookRepository.deleteById(bookId);
     }
 
 }
