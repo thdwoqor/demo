@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+
+env:
+  RESOURCE_PATH: './src/main/resources/application.yml'
+
 jobs:
   deploy:
     runs-on: self-hosted
@@ -17,6 +21,13 @@ jobs:
         with:
           java-version: '21'
           distribution: 'corretto'
+
+      - name: yml 파일 설정
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ${{ env.RESOURCE_PATH }}
+        env:
+          jwt.secret: ${{ secrets.JWT_SECRET }}
 
       - name: 빌드
         run: |

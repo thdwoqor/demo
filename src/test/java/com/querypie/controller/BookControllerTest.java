@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querypie.DatabaseCleaner;
 import com.querypie.domain.Book;
+import com.querypie.domain.BookFixture;
 import com.querypie.domain.BookRepository;
 import com.querypie.service.dto.BookResponse;
 import com.querypie.service.dto.BookSaveRequest;
@@ -54,8 +55,8 @@ class BookControllerTest {
     @Test
     void 모든_도서를_조회할_수_있다() {
         //given
-        Book book1 = bookRepository.save(new Book("Java의 정석", "남궁성", LocalDate.now()));
-        Book book2 = bookRepository.save(new Book("자바 ORM 표준 JPA 프로그래밍", "김영한", LocalDate.now()));
+        Book book1 = bookRepository.save(BookFixture.BOOK1);
+        Book book2 = bookRepository.save(BookFixture.BOOK2);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -80,7 +81,7 @@ class BookControllerTest {
     @Test
     void id로_도서를_조회할_수_있다() {
         //given
-        Book book = bookRepository.save(new Book("Java의 정석", "남궁성", LocalDate.now()));
+        Book book = bookRepository.save(BookFixture.BOOK1);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -100,7 +101,7 @@ class BookControllerTest {
     @Test
     void 도서를_수정할_수_있다() {
         //given
-        Book book = bookRepository.save(new Book("Java의 정석", "남궁성", LocalDate.now()));
+        Book book = bookRepository.save(BookFixture.BOOK1);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -120,7 +121,7 @@ class BookControllerTest {
     @Test
     void 도서를_삭제할_수_있다() {
         //given
-        Book book = bookRepository.save(new Book("Java의 정석", "남궁성", LocalDate.now()));
+        Book book = bookRepository.save(BookFixture.BOOK1);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()

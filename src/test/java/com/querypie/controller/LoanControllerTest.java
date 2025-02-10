@@ -2,14 +2,17 @@ package com.querypie.controller;
 
 import com.querypie.DatabaseCleaner;
 import com.querypie.domain.Book;
+import com.querypie.domain.BookFixture;
 import com.querypie.domain.BookRepository;
 import com.querypie.domain.User;
+import com.querypie.domain.UserFixture;
 import com.querypie.domain.UserRepository;
 import com.querypie.service.LoanService;
+import com.querypie.service.UserService;
 import com.querypie.service.dto.LoanRequest;
+import com.querypie.service.dto.TokenResponse;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.time.LocalDate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +30,7 @@ class LoanControllerTest {
     @Autowired
     private LoanService loanService;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @Autowired
     private DatabaseCleaner databaseCleaner;
 
@@ -43,13 +46,14 @@ class LoanControllerTest {
     @Test
     void 도서를_대출할_수_있다() {
         //given
-        Book book = bookRepository.save(new Book("Java의 정석", "남궁성", LocalDate.now()));
-        User user = userRepository.save(new User("송재백"));
+        Book book = bookRepository.save(BookFixture.BOOK1);
+        TokenResponse tokenResponse = userService.register(UserFixture.USER1_REGISTER_REQUEST);
 
         //when
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new LoanRequest(book.getId(), user.getId()))
+                .header("Authorization", "Bearer " + tokenResponse.accessToken())
+                .body(new LoanRequest(book.getId()))
                 .when().post("/loans")
                 .then().log().all()
                 .statusCode(200)
@@ -63,14 +67,15 @@ class LoanControllerTest {
     @Test
     void 도서를_반납할_수_있다() {
         //given
-        Book book = bookRepository.save(new Book("Java의 정석", "남궁성", LocalDate.now()));
-        User user = userRepository.save(new User("송재백"));
+        Book book = bookRepository.save(BookFixture.BOOK1);
+        TokenResponse tokenResponse = userService.register(UserFixture.USER1_REGISTER_REQUEST);
+        loanService.loanBook(new LoanRequest(book.getId()), 1L);
 
         //when
-        loanService.loanBook(new LoanRequest(book.getId(), user.getId()));
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new LoanRequest(book.getId(), user.getId()))
+                .header("Authorization", "Bearer " + tokenResponse.accessToken())
+                .body(new LoanRequest(book.getId()))
                 .when().delete("/loans")
                 .then().log().all()
                 .statusCode(200)

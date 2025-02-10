@@ -4,9 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.querypie.DatabaseCleaner;
 import com.querypie.domain.User;
+import com.querypie.domain.UserFixture;
 import com.querypie.domain.UserRepository;
 import com.querypie.service.dto.UserResponse;
-import com.querypie.service.dto.UserSaveRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
@@ -42,8 +42,8 @@ class UserControllerTest {
     void 사용자를_생성할_수_있다() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(new UserSaveRequest("송재백"))
-                .when().post("/users")
+                .body(UserFixture.USER1_REGISTER_REQUEST)
+                .when().post("/users/register")
                 .then().log().all()
                 .statusCode(200)
                 .extract();
@@ -52,8 +52,8 @@ class UserControllerTest {
     @Test
     void 모든_사용자를_조회할_수_있다() {
         //given
-        User user1 = userRepository.save(new User("송재백"));
-        User user2 = userRepository.save(new User("홍길동"));
+        User user1 = userRepository.save(UserFixture.USER1);
+        User user2 = userRepository.save(UserFixture.USER2);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()
@@ -74,7 +74,7 @@ class UserControllerTest {
     @Test
     void id로_사용자를_조회할_수_있다() {
         //given
-        User user = userRepository.save(new User("송재백"));
+        User user = userRepository.save(UserFixture.USER1);
 
         //when
         ExtractableResponse<Response> response = RestAssured.given().log().all()

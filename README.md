@@ -1,4 +1,13 @@
 # 퀵 스타트
+```application.yml
+...
+
+jwt:
+  access-token-expiration: 1800000 #30분
+  secret: {시크릿 키}
+```
+
+`openssl rand -hex 64` 명령어를 사용해서 시크릿 키를 추가 해야합니다.
 
 ```
 ./gradlew build
@@ -9,13 +18,12 @@ nohup java -jar querypie-0.0.1-SNAPSHOT.jar &
 ```
 
 # API 문서
-
+### local
 http://localhost:8080/swagger-ui/index.html
+### ec2
+http://52.79.240.37:8080/swagger-ui/index.html
 
-# 요구사항
-
-요구사항
-기본 기능
+# 요구사항 (구현 완료)
 
 1. 도서 관리
     - [X] 도서 등록
@@ -38,3 +46,4 @@ http://localhost:8080/swagger-ui/index.html
    - [X] Swagger API 문서 추가
    - [X] JPA(ORM) 사용
    - [X] H2 Database 사용 (과제 제출을 MySQL 기반으로 진행하기 어려움이 있어, H2 Database를 사용하였습니다.)
+   - [X] JWT 기반 인증/인가 (최소 기능으로 대출 및 반납시 JWT 기반 유저 인증 기능을 추가했습니다.)

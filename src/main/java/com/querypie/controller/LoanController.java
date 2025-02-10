@@ -17,14 +17,20 @@ public class LoanController {
     private final LoanService loanService;
 
     @PostMapping("/loans")
-    public ResponseEntity<BookResponse> loanBook(@RequestBody final LoanRequest request) {
-        loanService.loanBook(request);
+    public ResponseEntity<BookResponse> loanBook(
+            @RequestBody final LoanRequest request,
+            @LoginUserId final Long userId
+    ) {
+        loanService.loanBook(request, userId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/loans")
-    public ResponseEntity<BookResponse> returnBook(@RequestBody final LoanRequest request) {
-        loanService.returnBook(request);
+    public ResponseEntity<BookResponse> returnBook(
+            @RequestBody final LoanRequest request,
+            @LoginUserId final Long userId
+    ) {
+        loanService.returnBook(request, userId);
         return ResponseEntity.ok().build();
     }
 }
