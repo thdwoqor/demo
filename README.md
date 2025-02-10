@@ -22,6 +22,8 @@ nohup java -jar querypie-0.0.1-SNAPSHOT.jar &
 http://localhost:8080/swagger-ui/index.html
 ### ec2
 http://52.79.240.37:8080/swagger-ui/index.html
+### 예)도서 조회
+http://52.79.240.37:8080/books?title=The&page=0&size=20&sort=title,desc
 
 # 요구사항 (구현 완료)
 
